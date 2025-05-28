@@ -113,7 +113,7 @@ jobs:
             --assume-yes-for-downloads
 
       - name: Rename ELF
-        run: mv build/def2json def2json-linux-x64
+        run: mv build/def2json.bin def2json-linux-x64
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
