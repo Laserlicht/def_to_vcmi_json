@@ -25,6 +25,7 @@ jobs:
           pip install nuitka
 
       - name: Compile with Nuitka (x64)
+        shell: cmd
         run: |
           nuitka def2json.py ^
             --standalone ^
@@ -63,6 +64,7 @@ jobs:
           pip install nuitka
 
       - name: Compile with Nuitka (x86)
+        shell: cmd
         run: |
           nuitka def2json.py ^
             --standalone ^
