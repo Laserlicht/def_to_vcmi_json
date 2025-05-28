@@ -2,42 +2,83 @@ name: VCMI-DEF-Converter
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
 jobs:
-  pyinstaller-win:
+  build-x64:
+    name: Build for Windows x64
     runs-on: windows-latest
     steps:
-      - name: Create Executable
-        uses: sayyid5416/pyinstaller@v1
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.12 (x64)
+        uses: actions/setup-python@v4
         with:
-          python_ver: '3.12'
-          spec: 'main.py'
-          requirements: 'requirements.txt'
-          upload_exe_with_name: 'VCMI-DEF-Converter-win-AMD64'
-          options: --onefile, --name "VCMI-DEF-Converter", --windowed, 
-#  pyinstaller-mac:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Create Executable
-#        uses: sayyid5416/pyinstaller@v1
-#        with:
-#          python_ver: '3.12'
-#          spec: 'main.py'
-#          requirements: 'requirements.txt'
-#          upload_exe_with_name: 'VCMI-DEF-Converter-mac-ARM64'
-#          options: --onefile, --name "VCMI-DEF-Converter", --windowed, 
-  pyinstaller-linux:
-    runs-on: ubuntu-latest
+          python-version: '3.12'
+          architecture: 'x64'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install nuitka
+
+      - name: Compile with Nuitka (x64)
+        run: |
+          nuitka def2json.py ^
+            --standalone ^
+            --onefile ^
+            --enable-plugin=tk-inter ^
+            --output-dir=build ^
+            --nofollow-imports ^
+            --windows-disable-console ^
+            --assume-yes-for-downloads
+
+      - name: Rename EXE
+        run: |
+          Rename-Item -Path build\def2json.exe -NewName def2json-win-x64.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: def2json-win-x64
+          path: build/def2json-win-x64.exe
+
+  build-x86:
+    name: Build for Windows x86
+    runs-on: windows-latest
     steps:
-      - name: Create Executable
-        uses: sayyid5416/pyinstaller@v1
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.12 (x86)
+        uses: actions/setup-python@v4
         with:
-          python_ver: '3.12'
-          spec: 'main.py'
-          requirements: 'requirements.txt'
-          upload_exe_with_name: 'VCMI-DEF-Converter-linux-AMD64'
-          options: --onefile, --name "VCMI-DEF-Converter", --windowed, 
+          python-version: '3.12'
+          architecture: 'x86'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install nuitka
+
+      - name: Compile with Nuitka (x86)
+        run: |
+          nuitka def2json.py ^
+            --standalone ^
+            --onefile ^
+            --enable-plugin=tk-inter ^
+            --output-dir=build ^
+            --nofollow-imports ^
+            --windows-disable-console ^
+            --assume-yes-for-downloads
+
+      - name: Rename EXE
+        run: |
+          Rename-Item -Path build\def2json.exe -NewName def2json-win-x86.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: def2json-win-x86
+          path: build/def2json-win-x86.exe
