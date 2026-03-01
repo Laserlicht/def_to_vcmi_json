@@ -23,7 +23,7 @@ This tool converts **Heroes of Might and Magic III `.def` files** into a format 
 Run:
 
 ```bash
-python de2json.py
+python def2json.py
 ```
 
 Select one or more `.def` files using the file dialog. The tool will:
@@ -34,7 +34,7 @@ Select one or more `.def` files using the file dialog. The tool will:
 ### Option 2: Command-line mode
 
 ```bash
-python de2json.py path/to/file.def [another.def ...]
+python def2json.py path/to/file.def [another.def ...]
 ```
 
 This will process the provided `.def` files directly, without showing any GUI.
@@ -88,7 +88,7 @@ pip install -r requirements.txt
 Then run:
 
 ```bash
-python de2json.py
+python def2json.py
 ```
 
 ### ✅ Option 2: Standalone executable
@@ -99,8 +99,8 @@ If you don't have Python installed, use the provided standalone executable:
 - Just double-click or run from command line:
 
 ```bash
-./de2json.exe          # on Windows
-./de2json              # on Linux/
+./def2json.exe          # on Windows
+./def2json              # on Linux/
 ```
 
 
