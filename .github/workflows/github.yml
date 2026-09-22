@@ -11,10 +11,10 @@ jobs:
     name: Build for Windows x64
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python 3.12 (x64)
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           architecture: 'x64'
@@ -32,9 +32,13 @@ jobs:
             --onefile ^
             --enable-plugin=tk-inter ^
             --output-dir=build ^
-            --nofollow-imports ^
-            --windows-disable-console ^
+            --windows-console-mode=attach ^
             --assume-yes-for-downloads
+
+      # Starting the binary catches missing packaged imports before publishing it.
+      - name: Smoke test executable
+        shell: cmd
+        run: build\def2json.exe --help
 
       - name: Rename EXE
         run: |
@@ -50,10 +54,10 @@ jobs:
     name: Build for Windows x86
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python 3.12 (x86)
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           architecture: 'x86'
@@ -71,9 +75,13 @@ jobs:
             --onefile ^
             --enable-plugin=tk-inter ^
             --output-dir=build ^
-            --nofollow-imports ^
-            --windows-disable-console ^
+            --windows-console-mode=attach ^
             --assume-yes-for-downloads
+
+      # Starting the binary catches missing packaged imports before publishing it.
+      - name: Smoke test executable
+        shell: cmd
+        run: build\def2json.exe --help
 
       - name: Rename EXE
         run: |
@@ -90,10 +98,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
@@ -109,8 +117,11 @@ jobs:
             --onefile \
             --enable-plugin=tk-inter \
             --output-dir=build \
-            --nofollow-imports \
             --assume-yes-for-downloads
+
+      # Keep the same packaging regression check on every target.
+      - name: Smoke test executable
+        run: ./build/def2json.bin --help
 
       - name: Rename ELF
         run: mv build/def2json.bin def2json-linux-x64
